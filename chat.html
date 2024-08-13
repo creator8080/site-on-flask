@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат с самоучителем</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <button class="nav-button">Информатика</button>
+        <button class="nav-button">Русский язык</button>
+        <button class="nav-button">Биология</button>
+        <a href="/"><button class="nav-button">Математика</button></a>
+        <a href="/chat.html"><button class="nav-button">Самоучитель</button></a>
+    </div>
+    <div class="content">
+        <h1>Чат с самоучителем</h1>
+        <div id="chat-box">
+            <div id="messages"></div>
+        </div>
+        <input type="text" id="user-input" placeholder="Введите ваш вопрос...">
+        <button id="send-button">Отправить</button>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('#send-button').click(function(){
+                let userInput = $('#user-input').val();
+                if (userInput) {
+                    $('#messages').append('<div class="message user-message">' + userInput + '</div>');
+                    $('#user-input').val('');
+                    
+                    $.ajax({
+                        url: '/chat.html',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({message: userInput}),
+                        success: function(response) {
+                            $('#messages').append('<div class="message gpt-message">' + response.message + '</div>');
+                            $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                        }
+                    });
+                }
+            });
+            
+            $('#user-input').keypress(function(e) {
+                if (e.which == 13) {
+                    $('#send-button').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сгенерированный вариант</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <button class="nav-button">Информатика</button>
+        <button class="nav-button">Русский язык</button>
+        <button class="nav-button">Биология</button>
+        <a href="/"><button class="nav-button">Математика</button></a>
+        <a href="chat.html"><button class="nav-button">Самоучитель</button></a>
+    </div>
+    <div class="content">
+        <h1>Ваш вариант заданий</h1>
+
+        <!-- Таймер -->
+        <div id="timer-container">
+            <div>Оставшееся время:</div>
+            <div id="timer">03:55:00</div>
+            <button id="pauseButton">Пауза</button>
+        </div>
+
+        <form action="{{ url_for('check_answers') }}" method="POST">
+            {% for task_number, task in variant.items() %}
+                <div class="task">
+                    <h2>Задание {{ loop.index }}</h2>  <!-- Используем loop.index для правильной нумерации -->
+                    <img src="{{ url_for('static', filename='img/' + task['condition_image']) }}" alt="Условие задания {{ loop.index }}">
+                    {% if task['additional_image'] %}
+                        <img src="{{ url_for('static', filename='img/' + task['additional_image']) }}" alt="Дополнительное изображение к заданию {{ loop.index }}">
+                    {% endif %}
+                    <div class="answer">Введите ваш ответ: <input type="text" name="answer_{{ loop.index }}"></div>
+                    <input type="hidden" name="correct_answer_{{ loop.index }}" value="{{ task['answer'] }}">
+                </div>
+                <hr>
+            {% endfor %}
+            <button type="submit" class="submit-button">Отправить ответы</button>
+        </form>
+    </div>
+
+    <script>
+        let timeLeft = 14100; // Время в секундах (3 часа 55 минут)
+        let timerInterval;
+        let isPaused = false;
+
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.forms[0].submit(); // Отправляем форму, когда время истекает
+            } else if (!isPaused) {
+                timeLeft--;
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').innerText = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pauseButton').innerText = isPaused ? 'Продолжить' : 'Пауза';
+        }
+
+        document.getElementById('pauseButton').addEventListener('click', togglePause);
+
+        // Запуск таймера
+        window.onload = function() {
+            timerInterval = setInterval(updateTimer, 1000);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор вариантов ЕГЭ</title>
+    <link rel="stylesheet" href="static/css/style3.css">
+</head>
+<body>
+    <header>
+    <div class="header">
+        <button class="nav-button">Информатика</button>
+        <button class="nav-button">Русский язык</button>
+        <button class="nav-button">Биология</button>
+        <a href="/"><button class="nav-button">Математика</button></a>
+        <a href="chat.html"class="buttom_index">Самоучитель</a>
+    </div></header>
+    <div class="content">
+        <h1>Генератор вариантов ЕГЭ по математике</h1>
+        <a href="{{ url_for('generate_variant') }}"><button class="button_generate">Сгенерировать вариант</button></a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <button class="nav-button">Информатика</button>
+        <button class="nav-button">Русский язык</button>
+        <button class="nav-button">Биология</button>
+        <a href="/"><button class="nav-button">Математика</button></a>
+    </div>
+    <div class="content">
+        <h1>Результаты проверки</h1>
+        {% for task_number in user_answers.keys() %}
+            <div class="task">
+                <h2>Задание {{ task_number }}</h2>
+                <p>Ваш ответ: {{ user_answers[task_number] }}</p>
+                <p>Правильный ответ: {{ correct_answers[task_number] }}</p>
+                {% if results[task_number] %}
+                    <p style="color: green;">Верно</p>
+                {% else %}
+                    <p style="color: red;">Неверно</p>
+                {% endif %}
+                <h3>Решение:</h3>
+                <img src="{{ url_for('static', filename='img/' + solutions[task_number]) }}" alt="Решение задания {{ task_number }}">
+            </div>
+            <hr>
+        {% endfor %}
+        <a href="{{ url_for('index') }}"><button>На главную</button></a>
+    </div>
+</body>
+</html>
